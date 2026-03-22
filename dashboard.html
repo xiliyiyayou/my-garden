@@ -368,6 +368,7 @@
   <script>
     if (!sessionStorage.getItem('admin_logged')) {
       window.location.href = 'admin.html';
+      throw new Error('Unauthorized');
     }
     
     let data = {
