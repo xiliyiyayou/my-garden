@@ -233,11 +233,21 @@
   <footer class="footer">
     <div class="container">
       <p>© 2026 我的数字花园 · 用心记录每一天</p>
+      <div id="dev-area" style="display: none; margin-top: 10px;">
+        <a href="admin.html" style="font-size: 10px; color: var(--color-text-muted);">开发者入口</a>
+      </div>
     </div>
   </footer>
 
   <script src="js/supabase.js"></script>
   <script src="js/main.js"></script>
   <script src="js/frontend.js"></script>
+  <script>
+    // 开发者入口：通过 ?dev 或 ?admin 参数访问
+    const params = new URLSearchParams(window.location.search);
+    if (params.has('dev') || params.has('admin') || params.has('d')) {
+      document.getElementById('dev-area').style.display = 'block';
+    }
+  </script>
 </body>
 </html>
