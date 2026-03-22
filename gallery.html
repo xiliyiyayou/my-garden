@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>相册 - 我的数字花园</title>
+  <link rel="stylesheet" href="css/base.css">
+  <link rel="stylesheet" href="css/components.css">
+  <style>
+    .page-header {
+      text-align: center;
+      padding: var(--spacing-xl) 0 var(--spacing-lg);
+    }
+    
+    .page-header h1 {
+      margin-bottom: var(--spacing-xs);
+    }
+    
+    .page-header p {
+      color: var(--color-text-muted);
+    }
+    
+    .gallery-section {
+      padding-bottom: var(--spacing-xl);
+    }
+    
+    .gallery-section h2 {
+      margin-bottom: var(--spacing-md);
+      font-size: 1.3rem;
+      color: var(--color-text-muted);
+    }
+  </style>
+</head>
+<body>
+  <nav class="nav">
+    <div class="container nav-inner">
+      <a href="index.html" class="nav-logo">我的<span>空间</span></a>
+      <ul class="nav-links">
+        <li><a href="index.html">首页</a></li>
+        <li><a href="timeline.html">时间线</a></li>
+        <li><a href="gallery.html">相册</a></li>
+        <li><a href="notes.html">笔记</a></li>
+        <li><a href="about.html">关于</a></li>
+      </ul>
+      <div class="nav-toggle">
+        <span></span>
+        <span></span>
+        <span></span>
+      </div>
+    </div>
+  </nav>
+
+  <main class="page">
+    <div class="container">
+      <header class="page-header fade-in">
+        <h1>回忆相册</h1>
+        <p>定格的瞬间，珍藏的回忆</p>
+      </header>
+      
+      <section class="gallery-section fade-in">
+        <h2>精选照片</h2>
+        <div class="gallery-grid" id="gallery-content"></div>
+      </section>
+    </div>
+  </main>
+
+  <div id="lightbox" class="lightbox">
+    <img id="lightbox-img" src="" alt="">
+  </div>
+
+  <footer class="footer">
+    <div class="container">
+      <p>© 2026 我的数字花园 · 用心记录每一天</p>
+      <p style="margin-top: 8px; font-size: 0.8rem;"><a href="admin.html" style="color: var(--color-text-muted);">管理</a></p>
+    </div>
+  </footer>
+
+  <script src="js/main.js"></script>
+  <script src="js/frontend.js"></script>
+</body>
+</html>

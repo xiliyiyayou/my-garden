@@ -1,0 +1,596 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>管理后台 - 我的数字花园</title>
+  <link rel="stylesheet" href="css/base.css">
+  <link rel="stylesheet" href="css/components.css">
+  <style>
+    .dashboard {
+      min-height: 100vh;
+      padding: var(--spacing-lg) var(--spacing-md);
+      padding-top: 100px;
+    }
+    
+    .dash-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: var(--spacing-lg);
+    }
+    
+    .dash-header h1 {
+      font-size: 1.5rem;
+    }
+    
+    .dash-header .btn {
+      font-size: 0.85rem;
+      padding: 8px 16px;
+    }
+    
+    .dash-nav {
+      display: flex;
+      gap: var(--spacing-sm);
+      margin-bottom: var(--spacing-lg);
+      border-bottom: 1px solid var(--color-border);
+      padding-bottom: var(--spacing-sm);
+    }
+    
+    .dash-nav button {
+      background: none;
+      border: none;
+      color: var(--color-text-muted);
+      font-size: 1rem;
+      padding: 8px 16px;
+      cursor: pointer;
+      transition: var(--transition);
+    }
+    
+    .dash-nav button:hover,
+    .dash-nav button.active {
+      color: var(--color-accent);
+    }
+    
+    .dash-section {
+      display: none;
+    }
+    
+    .dash-section.active {
+      display: block;
+    }
+    
+    .item-list {
+      display: flex;
+      flex-direction: column;
+      gap: var(--spacing-sm);
+    }
+    
+    .item-card {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: var(--spacing-sm) var(--spacing-md);
+      background: var(--color-card);
+      border-radius: var(--radius-sm);
+    }
+    
+    .item-info h4 {
+      font-size: 1rem;
+      margin-bottom: 4px;
+    }
+    
+    .item-info .meta {
+      font-size: 0.8rem;
+      color: var(--color-text-muted);
+    }
+    
+    .item-actions {
+      display: flex;
+      gap: var(--spacing-xs);
+    }
+    
+    .item-actions button {
+      background: none;
+      border: 1px solid var(--color-border);
+      color: var(--color-text-muted);
+      padding: 4px 10px;
+      border-radius: 4px;
+      cursor: pointer;
+      font-size: 0.8rem;
+    }
+    
+    .item-actions button:hover {
+      border-color: var(--color-accent);
+      color: var(--color-accent);
+    }
+    
+    .item-actions button.delete:hover {
+      border-color: #e74c3c;
+      color: #e74c3c;
+    }
+    
+    .modal {
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.8);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      z-index: 2000;
+      padding: var(--spacing-md);
+    }
+    
+    .modal.active {
+      display: flex;
+    }
+    
+    .modal-content {
+      background: var(--color-card);
+      width: 100%;
+      max-width: 600px;
+      max-height: 90vh;
+      overflow-y: auto;
+      padding: var(--spacing-lg);
+      border-radius: var(--radius-md);
+    }
+    
+    .modal-content h2 {
+      margin-bottom: var(--spacing-md);
+    }
+    
+    .modal-content .form-group {
+      margin-bottom: var(--spacing-md);
+    }
+    
+    .modal-content label {
+      display: block;
+      margin-bottom: var(--spacing-xs);
+      color: var(--color-text-muted);
+    }
+    
+    .modal-content input,
+    .modal-content textarea,
+    .modal-content select {
+      width: 100%;
+      padding: 10px;
+      background: var(--color-bg-secondary);
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius-sm);
+      color: var(--color-text);
+      font-size: 0.95rem;
+    }
+    
+    .modal-content textarea {
+      min-height: 150px;
+      resize: vertical;
+    }
+    
+    .modal-content input:focus,
+    .modal-content textarea:focus,
+    .modal-content select:focus {
+      outline: none;
+      border-color: var(--color-accent);
+    }
+    
+    .modal-actions {
+      display: flex;
+      gap: var(--spacing-sm);
+      margin-top: var(--spacing-md);
+    }
+    
+    .empty-state {
+      text-align: center;
+      padding: var(--spacing-xl);
+      color: var(--color-text-muted);
+    }
+    
+    .stats {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: var(--spacing-md);
+      margin-bottom: var(--spacing-lg);
+    }
+    
+    .stat-card {
+      background: var(--color-card);
+      padding: var(--spacing-md);
+      border-radius: var(--radius-sm);
+      text-align: center;
+    }
+    
+    .stat-card .num {
+      font-size: 2rem;
+      color: var(--color-accent);
+      font-weight: 600;
+    }
+    
+    .stat-card .label {
+      color: var(--color-text-muted);
+      font-size: 0.9rem;
+    }
+    
+    @media (max-width: 600px) {
+      .stats {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+<body>
+  <nav class="nav">
+    <div class="container nav-inner">
+      <a href="index.html" class="nav-logo">我的<span>空间</span></a>
+      <a href="admin.html" class="nav-links" style="margin-left: auto; color: var(--color-text-muted); font-size: 0.85rem;">退出登录</a>
+    </div>
+  </nav>
+
+  <main class="dashboard container">
+    <div class="dash-header">
+      <h1>管理后台</h1>
+      <div>
+        <a href="index.html" class="btn btn-secondary">查看网站</a>
+      </div>
+    </div>
+    
+    <div class="stats">
+      <div class="stat-card">
+        <div class="num" id="stat-logs">0</div>
+        <div class="label">日志</div>
+      </div>
+      <div class="stat-card">
+        <div class="num" id="stat-notes">0</div>
+        <div class="label">笔记</div>
+      </div>
+      <div class="stat-card">
+        <div class="num" id="stat-photos">0</div>
+        <div class="label">照片</div>
+      </div>
+    </div>
+    
+    <div class="dash-nav">
+      <button class="active" data-tab="logs">日志</button>
+      <button data-tab="notes">笔记</button>
+      <button data-tab="photos">相册</button>
+      <button data-tab="settings">设置</button>
+    </div>
+    
+    <section id="logs" class="dash-section active">
+      <div style="margin-bottom: var(--spacing-md);">
+        <button class="btn btn-primary" onclick="openModal('log')">+ 添加日志</button>
+      </div>
+      <div class="item-list" id="logs-list"></div>
+    </section>
+    
+    <section id="notes" class="dash-section">
+      <div style="margin-bottom: var(--spacing-md);">
+        <button class="btn btn-primary" onclick="openModal('note')">+ 添加笔记</button>
+      </div>
+      <div class="item-list" id="notes-list"></div>
+    </section>
+    
+    <section id="photos" class="dash-section">
+      <div style="margin-bottom: var(--spacing-md);">
+        <button class="btn btn-primary" onclick="document.getElementById('photo-input').click()">+ 上传照片</button>
+        <input type="file" id="photo-input" accept="image/*" multiple style="display: none;">
+      </div>
+      <div class="item-list" id="photos-list"></div>
+    </section>
+    
+    <section id="settings" class="dash-section">
+      <div class="card">
+        <h3 style="margin-bottom: var(--spacing-md);">修改密码</h3>
+        <div class="form-group">
+          <label>新密码</label>
+          <input type="password" id="new-password" placeholder="输入新密码">
+        </div>
+        <button class="btn btn-primary" onclick="updatePassword()">保存</button>
+      </div>
+      <div class="card" style="margin-top: var(--spacing-md);">
+        <h3 style="margin-bottom: var(--spacing-md);">数据管理</h3>
+        <button class="btn btn-secondary" onclick="exportData()">导出数据</button>
+        <button class="btn btn-secondary" onclick="document.getElementById('import-input').click()">导入数据</button>
+        <input type="file" id="import-input" accept=".json" style="display: none;">
+        <p style="margin-top: var(--spacing-sm); color: var(--color-text-muted); font-size: 0.85rem;">注意：数据存储在浏览器本地，更换浏览器会丢失，建议定期导出备份</p>
+      </div>
+    </section>
+  </main>
+  
+  <div id="modal" class="modal">
+    <div class="modal-content">
+      <h2 id="modal-title">添加</h2>
+      <form id="modal-form">
+        <input type="hidden" id="edit-id">
+        <div class="form-group">
+          <label>标题</label>
+          <input type="text" id="title" required>
+        </div>
+        <div class="form-group">
+          <label>日期</label>
+          <input type="date" id="date" required>
+        </div>
+        <div class="form-group">
+          <label>内容</label>
+          <textarea id="content" required></textarea>
+        </div>
+        <div class="form-group">
+          <label>标签（用逗号分隔）</label>
+          <input type="text" id="tags" placeholder="如：生活, 学习">
+        </div>
+        <div class="modal-actions">
+          <button type="submit" class="btn btn-primary">保存</button>
+          <button type="button" class="btn btn-secondary" onclick="closeModal()">取消</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <script src="js/main.js"></script>
+  <script>
+    if (!sessionStorage.getItem('admin_logged')) {
+      window.location.href = 'admin.html';
+    }
+    
+    let data = {
+      logs: JSON.parse(localStorage.getItem('garden_logs') || '[]'),
+      notes: JSON.parse(localStorage.getItem('garden_notes') || '[]'),
+      photos: JSON.parse(localStorage.getItem('garden_photos') || '[]')
+    };
+    
+    let currentType = 'log';
+    let editingItem = null;
+    
+    function init() {
+      renderAll();
+    }
+    
+    function renderAll() {
+      renderLogs();
+      renderNotes();
+      renderPhotos();
+      document.getElementById('stat-logs').textContent = data.logs.length;
+      document.getElementById('stat-notes').textContent = data.notes.length;
+      document.getElementById('stat-photos').textContent = data.photos.length;
+    }
+    
+    function renderLogs() {
+      const list = document.getElementById('logs-list');
+      if (data.logs.length === 0) {
+        list.innerHTML = '<div class="empty-state">暂无日志，点击上方按钮添加</div>';
+        return;
+      }
+      list.innerHTML = data.logs.map(log => `
+        <div class="item-card">
+          <div class="item-info">
+            <h4>${escapeHtml(log.title)}</h4>
+            <div class="meta">${log.date}</div>
+          </div>
+          <div class="item-actions">
+            <button onclick="editItem('log', '${log.id}')">编辑</button>
+            <button class="delete" onclick="deleteItem('log', '${log.id}')">删除</button>
+          </div>
+        </div>
+      `).join('');
+    }
+    
+    function renderNotes() {
+      const list = document.getElementById('notes-list');
+      if (data.notes.length === 0) {
+        list.innerHTML = '<div class="empty-state">暂无笔记，点击上方按钮添加</div>';
+        return;
+      }
+      list.innerHTML = data.notes.map(note => `
+        <div class="item-card">
+          <div class="item-info">
+            <h4>${escapeHtml(note.title)}</h4>
+            <div class="meta">${note.date} · ${note.category || '未分类'}</div>
+          </div>
+          <div class="item-actions">
+            <button onclick="editItem('note', '${note.id}')">编辑</button>
+            <button class="delete" onclick="deleteItem('note', '${note.id}')">删除</button>
+          </div>
+        </div>
+      `).join('');
+    }
+    
+    function renderPhotos() {
+      const list = document.getElementById('photos-list');
+      if (data.photos.length === 0) {
+        list.innerHTML = '<div class="empty-state">暂无照片，点击上方按钮上传</div>';
+        return;
+      }
+      list.innerHTML = data.photos.map((photo, i) => `
+        <div class="item-card">
+          <div class="item-info" style="display: flex; align-items: center; gap: 10px;">
+            <img src="${photo.src}" style="width: 60px; height: 60px; object-fit: cover; border-radius: 4px;">
+            <div>
+              <h4>${photo.name || '照片 ' + (i + 1)}</h4>
+              <div class="meta">${photo.date}</div>
+            </div>
+          </div>
+          <div class="item-actions">
+            <button class="delete" onclick="deleteItem('photo', '${photo.id}')">删除</button>
+          </div>
+        </div>
+      `).join('');
+    }
+    
+    function openModal(type) {
+      currentType = type;
+      editingItem = null;
+      document.getElementById('modal-title').textContent = type === 'log' ? '添加日志' : '添加笔记';
+      document.getElementById('modal-form').reset();
+      document.getElementById('edit-id').value = '';
+      document.getElementById('date').value = new Date().toISOString().split('T')[0];
+      document.getElementById('modal').classList.add('active');
+    }
+    
+    function closeModal() {
+      document.getElementById('modal').classList.remove('active');
+    }
+    
+    function editItem(type, id) {
+      const list = type === 'log' ? data.logs : data.notes;
+      const item = list.find(i => i.id === id);
+      if (!item) return;
+      
+      currentType = type;
+      editingItem = item;
+      document.getElementById('modal-title').textContent = type === 'log' ? '编辑日志' : '编辑笔记';
+      document.getElementById('edit-id').value = item.id;
+      document.getElementById('title').value = item.title;
+      document.getElementById('date').value = item.date;
+      document.getElementById('content').value = item.content;
+      document.getElementById('tags').value = (item.tags || []).join(', ');
+      document.getElementById('modal').classList.add('active');
+    }
+    
+    function deleteItem(type, id) {
+      if (!confirm('确定要删除吗？')) return;
+      
+      if (type === 'log') {
+        data.logs = data.logs.filter(i => i.id !== id);
+        localStorage.setItem('garden_logs', JSON.stringify(data.logs));
+        renderLogs();
+      } else if (type === 'note') {
+        data.notes = data.notes.filter(i => i.id !== id);
+        localStorage.setItem('garden_notes', JSON.stringify(data.notes));
+        renderNotes();
+      } else if (type === 'photo') {
+        data.photos = data.photos.filter(i => i.id !== id);
+        localStorage.setItem('garden_photos', JSON.stringify(data.photos));
+        renderPhotos();
+      }
+      
+      document.getElementById('stat-logs').textContent = data.logs.length;
+      document.getElementById('stat-notes').textContent = data.notes.length;
+      document.getElementById('stat-photos').textContent = data.photos.length;
+    }
+    
+    document.getElementById('modal-form').addEventListener('submit', function(e) {
+      e.preventDefault();
+      
+      const id = document.getElementById('edit-id').value || Date.now().toString();
+      const item = {
+        id: id,
+        title: document.getElementById('title').value,
+        date: document.getElementById('date').value,
+        content: document.getElementById('content').value,
+        tags: document.getElementById('tags').value.split(',').map(t => t.trim()).filter(t => t)
+      };
+      
+      if (currentType === 'log') {
+        if (editingItem) {
+          const idx = data.logs.findIndex(i => i.id === id);
+          data.logs[idx] = { ...data.logs[idx], ...item };
+        } else {
+          data.logs.unshift(item);
+        }
+        localStorage.setItem('garden_logs', JSON.stringify(data.logs));
+        renderLogs();
+      } else {
+        if (editingItem) {
+          const idx = data.notes.findIndex(i => i.id === id);
+          data.notes[idx] = { ...data.notes[idx], ...item };
+        } else {
+          data.notes.unshift(item);
+        }
+        localStorage.setItem('garden_notes', JSON.stringify(data.notes));
+        renderNotes();
+      }
+      
+      document.getElementById('stat-logs').textContent = data.logs.length;
+      document.getElementById('stat-notes').textContent = data.notes.length;
+      closeModal();
+    });
+    
+    document.getElementById('photo-input').addEventListener('change', function(e) {
+      const files = Array.from(e.target.files);
+      files.forEach(file => {
+        const reader = new FileReader();
+        reader.onload = function(evt) {
+          const photo = {
+            id: Date.now().toString() + Math.random(),
+            src: evt.target.result,
+            name: file.name,
+            date: new Date().toISOString().split('T')[0]
+          };
+          data.photos.push(photo);
+          localStorage.setItem('garden_photos', JSON.stringify(data.photos));
+          renderPhotos();
+          document.getElementById('stat-photos').textContent = data.photos.length;
+        };
+        reader.readAsDataURL(file);
+      });
+      this.value = '';
+    });
+    
+    document.getElementById('import-input').addEventListener('change', function(e) {
+      const file = e.target.files[0];
+      if (!file) return;
+      
+      const reader = new FileReader();
+      reader.onload = function(evt) {
+        try {
+          const imported = JSON.parse(evt.target.result);
+          if (imported.logs) {
+            data.logs = imported.logs;
+            localStorage.setItem('garden_logs', JSON.stringify(data.logs));
+          }
+          if (imported.notes) {
+            data.notes = imported.notes;
+            localStorage.setItem('garden_notes', JSON.stringify(data.notes));
+          }
+          if (imported.photos) {
+            data.photos = imported.photos;
+            localStorage.setItem('garden_photos', JSON.stringify(data.photos));
+          }
+          renderAll();
+          alert('导入成功！');
+        } catch (err) {
+          alert('文件格式错误');
+        }
+      };
+      reader.readAsText(file);
+      this.value = '';
+    });
+    
+    function exportData() {
+      const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = 'garden-backup-' + new Date().toISOString().split('T')[0] + '.json';
+      a.click();
+      URL.revokeObjectURL(url);
+    }
+    
+    function updatePassword() {
+      const newPwd = document.getElementById('new-password').value;
+      if (!newPwd) {
+        alert('请输入新密码');
+        return;
+      }
+      localStorage.setItem('admin_password', newPwd);
+      alert('密码已更新');
+    }
+    
+    document.querySelectorAll('.dash-nav button').forEach(btn => {
+      btn.addEventListener('click', function() {
+        document.querySelectorAll('.dash-nav button').forEach(b => b.classList.remove('active'));
+        document.querySelectorAll('.dash-section').forEach(s => s.classList.remove('active'));
+        this.classList.add('active');
+        document.getElementById(this.dataset.tab).classList.add('active');
+      });
+    });
+    
+    function escapeHtml(text) {
+      const div = document.createElement('div');
+      div.textContent = text;
+      return div.innerHTML;
+    }
+    
+    init();
+  </script>
+</body>
+</html>

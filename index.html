@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>我的数字花园</title>
+  <link rel="stylesheet" href="css/base.css">
+  <link rel="stylesheet" href="css/components.css">
+  <style>
+    .hero {
+      min-height: calc(100vh - 70px);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: var(--spacing-xl);
+      padding: var(--spacing-lg) var(--spacing-md);
+    }
+    
+    .hero-content {
+      max-width: 500px;
+    }
+    
+    .hero h1 {
+      margin-bottom: var(--spacing-sm);
+    }
+    
+    .hero h1 span {
+      color: var(--color-accent);
+    }
+    
+    .hero .tagline {
+      color: var(--color-text-muted);
+      font-size: 1.1rem;
+      margin-bottom: var(--spacing-md);
+    }
+    
+    .hero-actions {
+      display: flex;
+      gap: var(--spacing-sm);
+    }
+    
+    .hero-3d {
+      width: 300px;
+      height: 300px;
+      perspective: 1000px;
+      cursor: pointer;
+    }
+    
+    .cube-wrap {
+      width: 100%;
+      height: 100%;
+      position: relative;
+      transform-style: preserve-3d;
+      animation: rotateCube 20s linear infinite;
+    }
+    
+    @keyframes rotateCube {
+      from { transform: rotateX(-10deg) rotateY(0deg); }
+      to { transform: rotateX(-10deg) rotateY(360deg); }
+    }
+    
+    .cube-face {
+      position: absolute;
+      width: 200px;
+      height: 200px;
+      left: 50px;
+      top: 50px;
+      border: 2px solid var(--color-accent);
+      overflow: hidden;
+    }
+    
+    .cube-face img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+    
+    .cube-face.front  { transform: translateZ(100px); }
+    .cube-face.back   { transform: rotateY(180deg) translateZ(100px); }
+    .cube-face.left   { transform: rotateY(-90deg) translateZ(100px); }
+    .cube-face.right  { transform: rotateY(90deg) translateZ(100px); }
+    .cube-face.top    { transform: rotateX(90deg) translateZ(100px); }
+    .cube-face.bottom { transform: rotateX(-90deg) translateZ(100px); }
+    
+    .hero-3d:hover .cube-wrap {
+      animation-play-state: paused;
+    }
+    
+    .hero-3d .hint {
+      text-align: center;
+      margin-top: var(--spacing-sm);
+      font-size: 0.85rem;
+      color: var(--color-text-muted);
+    }
+    
+    .quick-links {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: var(--spacing-md);
+      margin-top: var(--spacing-xl);
+    }
+    
+    .quick-link {
+      text-align: center;
+      padding: var(--spacing-md);
+      background: var(--color-card);
+      border-radius: var(--radius-md);
+      transition: var(--transition);
+    }
+    
+    .quick-link:hover {
+      background: var(--color-card-hover);
+      transform: translateY(-5px);
+    }
+    
+    .quick-link-icon {
+      font-size: 2rem;
+      margin-bottom: var(--spacing-xs);
+    }
+    
+    .quick-link h4 {
+      color: var(--color-text);
+      margin-bottom: 4px;
+    }
+    
+    .quick-link p {
+      font-size: 0.85rem;
+      color: var(--color-text-muted);
+    }
+    
+    @media (max-width: 900px) {
+      .hero {
+        flex-direction: column;
+        text-align: center;
+      }
+      
+      .hero-actions {
+        justify-content: center;
+      }
+      
+      .quick-links {
+        grid-template-columns: repeat(2, 1fr);
+      }
+    }
+    
+    @media (max-width: 500px) {
+      .hero-3d {
+        width: 200px;
+        height: 200px;
+      }
+      
+      .cube-face {
+        width: 140px;
+        height: 140px;
+        left: 30px;
+        top: 30px;
+      }
+      
+      .cube-face.front { transform: translateZ(70px); }
+      .cube-face.back { transform: rotateY(180deg) translateZ(70px); }
+      .cube-face.left { transform: rotateY(-90deg) translateZ(70px); }
+      .cube-face.right { transform: rotateY(90deg) translateZ(70px); }
+      .cube-face.top { transform: rotateX(90deg) translateZ(70px); }
+      .cube-face.bottom { transform: rotateX(-90deg) translateZ(70px); }
+    }
+  </style>
+</head>
+<body>
+  <nav class="nav">
+    <div class="container nav-inner">
+      <a href="index.html" class="nav-logo">我的<span>空间</span></a>
+      <ul class="nav-links">
+        <li><a href="index.html">首页</a></li>
+        <li><a href="timeline.html">时间线</a></li>
+        <li><a href="gallery.html">相册</a></li>
+        <li><a href="notes.html">笔记</a></li>
+        <li><a href="about.html">关于</a></li>
+      </ul>
+      <div class="nav-toggle">
+        <span></span>
+        <span></span>
+        <span></span>
+      </div>
+    </div>
+  </nav>
+
+  <main class="page">
+    <section class="hero container">
+      <div class="hero-content fade-in">
+        <h1>你好，我是 <span>你</span></h1>
+        <p class="tagline">记录生活 · 收藏回忆 · 分享学习</p>
+        <div class="hero-actions">
+          <a href="timeline.html" class="btn btn-primary">开始浏览</a>
+          <a href="about.html" class="btn btn-secondary">了解更多</a>
+        </div>
+        <div class="quick-links">
+          <a href="timeline.html" class="quick-link">
+            <div class="quick-link-icon">📝</div>
+            <h4>日志</h4>
+            <p>生活随笔</p>
+          </a>
+          <a href="gallery.html" class="quick-link">
+            <div class="quick-link-icon">📷</div>
+            <h4>相册</h4>
+            <p>回忆瞬间</p>
+          </a>
+          <a href="notes.html" class="quick-link">
+            <div class="quick-link-icon">📚</div>
+            <h4>笔记</h4>
+            <p>学习记录</p>
+          </a>
+          <a href="about.html" class="quick-link">
+            <div class="quick-link-icon">👤</div>
+            <h4>关于</h4>
+            <p>了解更多</p>
+          </a>
+        </div>
+      </div>
+      <div class="hero-3d fade-in">
+        <div class="cube-wrap">
+          <div class="cube-face front"><img src="images/1.jpg" alt=""></div>
+          <div class="cube-face back"><img src="images/2.jpg" alt=""></div>
+          <div class="cube-face left"><img src="images/3.jpg" alt=""></div>
+          <div class="cube-face right"><img src="images/4.jpg" alt=""></div>
+          <div class="cube-face top"><img src="images/5.jpg" alt=""></div>
+          <div class="cube-face bottom"><img src="images/6.jpg" alt=""></div>
+        </div>
+        <p class="hint">点击图片可跳转相册</p>
+      </div>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <div class="container">
+      <p>© 2026 我的数字花园 · 用心记录每一天</p>
+      <p style="margin-top: 8px; font-size: 0.8rem;"><a href="admin.html" style="color: var(--color-text-muted);">管理</a></p>
+    </div>
+  </footer>
+
+  <script src="js/main.js"></script>
+  <script src="js/frontend.js"></script>
+</body>
+</html>

@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>时间线 - 我的数字花园</title>
+  <link rel="stylesheet" href="css/base.css">
+  <link rel="stylesheet" href="css/components.css">
+  <style>
+    .page-header {
+      text-align: center;
+      padding: var(--spacing-xl) 0 var(--spacing-lg);
+    }
+    
+    .page-header h1 {
+      margin-bottom: var(--spacing-xs);
+    }
+    
+    .page-header p {
+      color: var(--color-text-muted);
+    }
+    
+    .timeline-card {
+      background: var(--color-card);
+      border-radius: var(--radius-md);
+      padding: var(--spacing-md);
+      margin-bottom: var(--spacing-md);
+    }
+    
+    .timeline-card:hover {
+      background: var(--color-card-hover);
+    }
+    
+    .timeline-card .date {
+      font-size: 0.85rem;
+      color: var(--color-accent);
+      margin-bottom: var(--spacing-xs);
+    }
+    
+    .timeline-card h3 {
+      margin-bottom: var(--spacing-xs);
+    }
+    
+    .timeline-card .excerpt {
+      color: var(--color-text-muted);
+      margin-bottom: var(--spacing-sm);
+    }
+    
+    .timeline-card .tags {
+      display: flex;
+      gap: var(--spacing-xs);
+      flex-wrap: wrap;
+    }
+    
+    .empty-state {
+      text-align: center;
+      padding: var(--spacing-xl);
+      color: var(--color-text-muted);
+    }
+    
+    .empty-state-icon {
+      font-size: 3rem;
+      margin-bottom: var(--spacing-sm);
+    }
+  </style>
+</head>
+<body>
+  <nav class="nav">
+    <div class="container nav-inner">
+      <a href="index.html" class="nav-logo">我的<span>空间</span></a>
+      <ul class="nav-links">
+        <li><a href="index.html">首页</a></li>
+        <li><a href="timeline.html">时间线</a></li>
+        <li><a href="gallery.html">相册</a></li>
+        <li><a href="notes.html">笔记</a></li>
+        <li><a href="about.html">关于</a></li>
+      </ul>
+      <div class="nav-toggle">
+        <span></span>
+        <span></span>
+        <span></span>
+      </div>
+    </div>
+  </nav>
+
+  <main class="page">
+    <div class="container">
+      <header class="page-header fade-in">
+        <h1>时间线</h1>
+        <p>记录生活中的每一个瞬间</p>
+      </header>
+      
+      <div class="timeline fade-in" id="timeline-list"></div>
+      
+      <div class="empty-state fade-in">
+        <div class="empty-state-icon">📝</div>
+        <p>更多记录正在路上...</p>
+      </div>
+    </div>
+  </main>
+
+  <footer class="footer">
+    <div class="container">
+      <p>© 2026 我的数字花园 · 用心记录每一天</p>
+      <p style="margin-top: 8px; font-size: 0.8rem;"><a href="admin.html" style="color: var(--color-text-muted);">管理</a></p>
+    </div>
+  </footer>
+
+  <script src="js/main.js"></script>
+  <script src="js/frontend.js"></script>
+</body>
+</html>

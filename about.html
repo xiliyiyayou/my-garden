@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>关于 - 我的数字花园</title>
+  <link rel="stylesheet" href="css/base.css">
+  <link rel="stylesheet" href="css/components.css">
+  <style>
+    .about-hero {
+      display: flex;
+      gap: var(--spacing-xl);
+      align-items: flex-start;
+      margin-bottom: var(--spacing-xl);
+    }
+    
+    .about-avatar {
+      width: 180px;
+      height: 180px;
+      border-radius: 50%;
+      object-fit: cover;
+      border: 4px solid var(--color-accent);
+      flex-shrink: 0;
+    }
+    
+    .about-info h1 {
+      margin-bottom: var(--spacing-sm);
+    }
+    
+    .about-info .subtitle {
+      color: var(--color-accent);
+      font-size: 1.1rem;
+      margin-bottom: var(--spacing-md);
+    }
+    
+    .about-info .description {
+      color: var(--color-text-muted);
+      line-height: 1.8;
+    }
+    
+    .about-section {
+      margin-bottom: var(--spacing-xl);
+    }
+    
+    .about-section h2 {
+      margin-bottom: var(--spacing-md);
+      padding-bottom: var(--spacing-xs);
+      border-bottom: 1px solid var(--color-border);
+    }
+    
+    .info-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: var(--spacing-sm);
+    }
+    
+    .info-item {
+      display: flex;
+      gap: var(--spacing-xs);
+    }
+    
+    .info-item .label {
+      color: var(--color-text-muted);
+      min-width: 60px;
+    }
+    
+    .journey-item {
+      display: flex;
+      gap: var(--spacing-md);
+      padding-bottom: var(--spacing-md);
+      border-bottom: 1px solid var(--color-border);
+    }
+    
+    .journey-item:last-child {
+      border-bottom: none;
+    }
+    
+    .journey-year {
+      font-weight: 600;
+      color: var(--color-accent);
+      min-width: 80px;
+    }
+    
+    .journey-content h4 {
+      margin-bottom: 4px;
+    }
+    
+    .journey-content p {
+      color: var(--color-text-muted);
+      font-size: 0.9rem;
+    }
+    
+    .contact-card {
+      text-align: center;
+      padding: var(--spacing-lg);
+    }
+    
+    .contact-card p {
+      color: var(--color-text-muted);
+      margin-bottom: var(--spacing-md);
+    }
+    
+    @media (max-width: 768px) {
+      .about-hero {
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+      }
+      
+      .info-grid {
+        grid-template-columns: 1fr;
+      }
+      
+      .journey-item {
+        flex-direction: column;
+        gap: 4px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <nav class="nav">
+    <div class="container nav-inner">
+      <a href="index.html" class="nav-logo">我的<span>空间</span></a>
+      <ul class="nav-links">
+        <li><a href="index.html">首页</a></li>
+        <li><a href="timeline.html">时间线</a></li>
+        <li><a href="gallery.html">相册</a></li>
+        <li><a href="notes.html">笔记</a></li>
+        <li><a href="about.html">关于</a></li>
+      </ul>
+      <div class="nav-toggle">
+        <span></span>
+        <span></span>
+        <span></span>
+      </div>
+    </div>
+  </nav>
+
+  <main class="page">
+    <div class="container">
+      <div class="about-hero fade-in">
+        <img src="images/1.jpg" alt="头像" class="about-avatar">
+        <div class="about-info">
+          <h1>你好，我是 <span style="color: var(--color-accent);">你</span></h1>
+          <p class="subtitle">记录者 · 学习者 · 梦想家</p>
+          <p class="description">
+            欢迎来到我的数字花园。这是一个我记录生活、收藏回忆、分享学习的地方。<br>
+            我喜欢探索新事物，享受记录带来的乐趣。这里有我的故事，我的思考，我的成长。
+          </p>
+        </div>
+      </div>
+      
+      <div class="about-section fade-in">
+        <h2>基本信息</h2>
+        <div class="info-grid">
+          <div class="info-item">
+            <span class="label">位置：</span>
+            <span>地球 · 中国</span>
+          </div>
+          <div class="info-item">
+            <span class="label">邮箱：</span>
+            <span>your@email.com</span>
+          </div>
+          <div class="info-item">
+            <span class="label">爱好：</span>
+            <span>阅读、摄影、编程</span>
+          </div>
+          <div class="info-item">
+            <span class="label">状态：</span>
+            <span>持续学习中</span>
+          </div>
+        </div>
+      </div>
+      
+      <div class="about-section fade-in">
+        <h2>成长历程</h2>
+        <div class="timeline">
+          <div class="journey-item">
+            <div class="journey-year">2026</div>
+            <div class="journey-content">
+              <h4>开启个人网站</h4>
+              <p>搭建了这个数字花园，开始系统性地记录生活和学习</p>
+            </div>
+          </div>
+          <div class="journey-item">
+            <div class="journey-year">2025</div>
+            <div class="journey-content">
+              <h4>学习新技术</h4>
+              <p>开始接触Web开发，探索编程的乐趣</p>
+            </div>
+          </div>
+          <div class="journey-item">
+            <div class="journey-year">2024</div>
+            <div class="journey-content">
+              <h4>新的开始</h4>
+              <p>大学毕业，踏入新的旅程</p>
+            </div>
+          </div>
+          <div class="journey-item">
+            <div class="journey-year">更早</div>
+            <div class="journey-content">
+              <h4>相遇</h4>
+              <p>与你们相遇，开始这段旅程</p>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <div class="about-section fade-in">
+        <h2>联系我</h2>
+        <div class="card contact-card">
+          <p>如果有兴趣交流，欢迎通过以下方式联系我</p>
+          <div class="social-links">
+            <a href="#" title="GitHub">GH</a>
+            <a href="#" title="邮箱">✉</a>
+            <a href="#" title="微信">微</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <footer class="footer">
+    <div class="container">
+      <p>© 2026 我的数字花园 · 用心记录每一天</p>
+    </div>
+  </footer>
+
+  <script src="js/main.js"></script>
+</body>
+</html>
