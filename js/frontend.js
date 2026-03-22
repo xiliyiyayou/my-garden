@@ -7,8 +7,6 @@ async function loadAndRender() {
   const cubeFaces = document.getElementById('cube-faces');
   
   try {
-    await new Promise(r => setTimeout(r, 50));
-    
     // 加载首页3D旋转相册照片
     if (cubeFaces) {
       const photos = await window.supabaseApi.getPhotos();

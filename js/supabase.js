@@ -1,26 +1,51 @@
 var SUPABASE_URL = 'https://gfghweunfkwetamseteb.supabase.co';
 var SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImdmZ2h3ZXVuZmt3ZXRhbXNldGViIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzQxNTE2ODAsImV4cCI6MjA4OTcyNzY4MH0.o-V0CmBaM0lYhFi4cqigfwmunXW1XzzW0OFyIUD4fKM';
 
+// 缓存机制
+var cache = {
+  logs: null,
+  notes: null,
+  photos: null,
+  profile: null,
+  timestamp: 0
+};
+var CACHE_DURATION = 30000; // 30秒缓存
+
 const supabaseApi = {
   async getLogs() {
+    if (cache.logs && Date.now() - cache.timestamp < CACHE_DURATION) {
+      return cache.logs;
+    }
     const res = await fetch(`${SUPABASE_URL}/rest/v1/logs?order=date.desc`, {
       headers: { 'apikey': SUPABASE_KEY, 'Authorization': `Bearer ${SUPABASE_KEY}` }
     });
-    return res.json();
+    cache.logs = await res.json();
+    cache.timestamp = Date.now();
+    return cache.logs;
   },
 
   async getNotes() {
+    if (cache.notes && Date.now() - cache.timestamp < CACHE_DURATION) {
+      return cache.notes;
+    }
     const res = await fetch(`${SUPABASE_URL}/rest/v1/notes?order=date.desc`, {
       headers: { 'apikey': SUPABASE_KEY, 'Authorization': `Bearer ${SUPABASE_KEY}` }
     });
-    return res.json();
+    cache.notes = await res.json();
+    cache.timestamp = Date.now();
+    return cache.notes;
   },
 
   async getPhotos() {
+    if (cache.photos && Date.now() - cache.timestamp < CACHE_DURATION) {
+      return cache.photos;
+    }
     const res = await fetch(`${SUPABASE_URL}/rest/v1/photos?order=date.desc`, {
       headers: { 'apikey': SUPABASE_KEY, 'Authorization': `Bearer ${SUPABASE_KEY}` }
     });
-    return res.json();
+    cache.photos = await res.json();
+    cache.timestamp = Date.now();
+    return cache.photos;
   },
 
   async addLog(log) {
@@ -118,11 +143,16 @@ const supabaseApi = {
   },
 
   async getProfile() {
+    if (cache.profile && Date.now() - cache.timestamp < CACHE_DURATION) {
+      return cache.profile;
+    }
     const res = await fetch(`${SUPABASE_URL}/rest/v1/profile?id=eq.1`, {
       headers: { 'apikey': SUPABASE_KEY, 'Authorization': `Bearer ${SUPABASE_KEY}` }
     });
     const data = await res.json();
-    return data && data.length > 0 ? data[0] : null;
+    cache.profile = data && data.length > 0 ? data[0] : null;
+    cache.timestamp = Date.now();
+    return cache.profile;
   }
 };
 
