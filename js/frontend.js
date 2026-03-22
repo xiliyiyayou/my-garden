@@ -61,6 +61,23 @@ async function loadAndRender() {
       if (aboutEmail && profile.email) {
         aboutEmail.textContent = profile.email;
       }
+      
+      // 成长历程
+      const journeyContainer = document.getElementById('journey-content');
+      if (journeyContainer) {
+        const journey = await window.supabaseApi.getJourney();
+        if (journey && journey.length > 0) {
+          journeyContainer.innerHTML = journey.map(j => `
+            <div class="journey-item">
+              <div class="journey-year">${escapeHtml(j.year)}</div>
+              <div class="journey-content">
+                <h4>${escapeHtml(j.title)}</h4>
+                <p>${escapeHtml(j.description || '')}</p>
+              </div>
+            </div>
+          `).join('');
+        }
+      }
     }
     
     if (logsContainer) {

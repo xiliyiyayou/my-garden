@@ -155,6 +155,57 @@ const supabaseApi = {
   clearCache() {
     cache = {};
     localStorage.removeItem('garden_cache');
+  },
+  
+  // 成长历程
+  async getJourney() {
+    if (cache.journey && Date.now() - cache.journeyTime < CACHE_DURATION) return cache.journey;
+    const res = await fetch(`${SUPABASE_URL}/rest/v1/journey?order=sort_order.asc`, {
+      headers: { 'apikey': SUPABASE_KEY, 'Authorization': `Bearer ${SUPABASE_KEY}`, 'Cache-Control': 'no-cache' }
+    });
+    cache.journey = await res.json();
+    cache.journeyTime = Date.now();
+    saveCache();
+    return cache.journey;
+  },
+  
+  async addJourney(item) {
+    const res = await fetch(`${SUPABASE_URL}/rest/v1/journey`, {
+      method: 'POST',
+      headers: { 
+        'apikey': SUPABASE_KEY, 
+        'Authorization': `Bearer ${SUPABASE_KEY}`,
+        'Content-Type': 'application/json',
+        'Prefer': 'return=minimal'
+      },
+      body: JSON.stringify(item)
+    });
+    cache.journey = null;
+    return res.ok;
+  },
+  
+  async updateJourney(id, item) {
+    const res = await fetch(`${SUPABASE_URL}/rest/v1/journey?id=eq.${id}`, {
+      method: 'PATCH',
+      headers: { 
+        'apikey': SUPABASE_KEY, 
+        'Authorization': `Bearer ${SUPABASE_KEY}`,
+        'Content-Type': 'application/json',
+        'Prefer': 'return=minimal'
+      },
+      body: JSON.stringify(item)
+    });
+    cache.journey = null;
+    return res.ok;
+  },
+  
+  async deleteJourney(id) {
+    const res = await fetch(`${SUPABASE_URL}/rest/v1/journey?id=eq.${id}`, {
+      method: 'DELETE',
+      headers: { 'apikey': SUPABASE_KEY, 'Authorization': `Bearer ${SUPABASE_KEY}` }
+    });
+    cache.journey = null;
+    return res.ok;
   }
 };
 

@@ -253,6 +253,7 @@
       <button data-tab="logs">日志</button>
       <button data-tab="notes">笔记</button>
       <button data-tab="photos">相册</button>
+      <button data-tab="journey">成长历程</button>
     </div>
     
     <section id="profile" class="dash-section active">
@@ -313,6 +314,13 @@
         <input type="file" id="photo-input" accept="image/*" multiple style="display: none;">
       </div>
       <div class="item-list" id="photos-list"></div>
+    </section>
+    
+    <section id="journey" class="dash-section">
+      <div style="margin-bottom: var(--spacing-md);">
+        <button class="btn btn-primary" onclick="openJourneyModal()">+ 添加经历</button>
+      </div>
+      <div class="item-list" id="journey-list"></div>
     </section>
     
     <section id="settings" class="dash-section" style="display: none;">
@@ -391,6 +399,7 @@
         data.logs = await window.supabaseApi.getLogs() || [];
         data.notes = await window.supabaseApi.getNotes() || [];
         data.photos = await window.supabaseApi.getPhotos() || [];
+        data.journey = await window.supabaseApi.getJourney() || [];
       } catch (e) {
         console.error('加载数据失败', e);
       }
@@ -515,6 +524,7 @@
       renderLogs();
       renderNotes();
       renderPhotos();
+      renderJourney();
       document.getElementById('stat-logs').textContent = data.logs.length;
       document.getElementById('stat-notes').textContent = data.notes.length;
       document.getElementById('stat-photos').textContent = data.photos.length;
@@ -592,6 +602,128 @@
         </div>
       `).join('');
     }
+    
+    function renderJourney() {
+      const list = document.getElementById('journey-list');
+      if (!data.journey || data.journey.length === 0) {
+        list.innerHTML = '<div class="empty-state">暂无经历，点击上方按钮添加</div>';
+        return;
+      }
+      list.innerHTML = data.journey.map(j => `
+        <div class="item-card">
+          <div class="item-info">
+            <h4>${escapeHtml(j.title)}</h4>
+            <div class="meta">${escapeHtml(j.year)}</div>
+          </div>
+          <div class="item-actions">
+            <button onclick="editJourney('${j.id}')">编辑</button>
+            <button class="delete" onclick="deleteJourney('${j.id}')">删除</button>
+          </div>
+        </div>
+      `).join('');
+    }
+    
+    function openJourneyModal(editItem) {
+      const modal = document.getElementById('journey-modal');
+      if (!modal) {
+        const html = `
+        <div id="journey-modal" class="modal">
+          <div class="modal-content">
+            <h2 id="journey-modal-title">添加经历</h2>
+            <input type="hidden" id="journey-edit-id">
+            <div class="form-group">
+              <label>年份</label>
+              <input type="text" id="journey-year" placeholder="如：2026">
+            </div>
+            <div class="form-group">
+              <label>标题</label>
+              <input type="text" id="journey-title" placeholder="如：开启个人网站">
+            </div>
+            <div class="form-group">
+              <label>描述</label>
+              <textarea id="journey-desc" rows="3" placeholder="描述这段经历"></textarea>
+            </div>
+            <div class="form-group">
+              <label>排序（数字越大越靠前）</label>
+              <input type="number" id="journey-sort" value="0">
+            </div>
+            <div class="modal-actions">
+              <button class="btn btn-primary" onclick="saveJourney()">保存</button>
+              <button class="btn btn-secondary" onclick="closeJourneyModal()">取消</button>
+            </div>
+          </div>
+        </div>`;
+        document.body.insertAdjacentHTML('beforeend', html);
+      }
+      const m = document.getElementById('journey-modal');
+      if (editItem) {
+        document.getElementById('journey-modal-title').textContent = '编辑经历';
+        document.getElementById('journey-edit-id').value = editItem.id;
+        document.getElementById('journey-year').value = editItem.year || '';
+        document.getElementById('journey-title').value = editItem.title || '';
+        document.getElementById('journey-desc').value = editItem.description || '';
+        document.getElementById('journey-sort').value = editItem.sort_order || 0;
+      } else {
+        document.getElementById('journey-modal-title').textContent = '添加经历';
+        document.getElementById('journey-edit-id').value = '';
+        document.getElementById('journey-year').value = '';
+        document.getElementById('journey-title').value = '';
+        document.getElementById('journey-desc').value = '';
+        document.getElementById('journey-sort').value = data.journey.length + 1;
+      }
+      m.classList.add('active');
+    }
+    
+    function closeJourneyModal() {
+      document.getElementById('journey-modal').classList.remove('active');
+    }
+    
+    window.openJourneyModal = openJourneyModal;
+    window.closeJourneyModal = closeJourneyModal;
+    
+    async function saveJourney() {
+      const id = document.getElementById('journey-edit-id').value;
+      const item = {
+        year: document.getElementById('journey-year').value,
+        title: document.getElementById('journey-title').value,
+        description: document.getElementById('journey-desc').value,
+        sort_order: parseInt(document.getElementById('journey-sort').value) || 0
+      };
+      
+      if (!item.year || !item.title) {
+        alert('请填写年份和标题');
+        return;
+      }
+      
+      if (id) {
+        await window.supabaseApi.updateJourney(id, item);
+        const idx = data.journey.findIndex(j => j.id === id);
+        if (idx !== -1) data.journey[idx] = { ...data.journey[idx], ...item };
+      } else {
+        item.id = Date.now().toString();
+        await window.supabaseApi.addJourney(item);
+        data.journey.push(item);
+      }
+      renderJourney();
+      closeJourneyModal();
+    }
+    
+    window.saveJourney = saveJourney;
+    
+    async function editJourney(id) {
+      const item = data.journey.find(j => j.id === id);
+      if (item) openJourneyModal(item);
+    }
+    
+    async function deleteJourney(id) {
+      if (!confirm('确定删除？')) return;
+      await window.supabaseApi.deleteJourney(id);
+      data.journey = data.journey.filter(j => j.id !== id);
+      renderJourney();
+    }
+    
+    window.editJourney = editJourney;
+    window.deleteJourney = deleteJourney;
     
     function openModal(type) {
       currentType = type;
