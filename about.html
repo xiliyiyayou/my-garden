@@ -140,11 +140,11 @@
   <main class="page">
     <div class="container">
       <div class="about-hero fade-in">
-        <img src="images/1.jpg" alt="头像" class="about-avatar">
+        <img id="about-avatar" src="images/1.jpg" alt="头像" class="about-avatar">
         <div class="about-info">
-          <h1>你好，我是 <span style="color: var(--color-accent);">你</span></h1>
-          <p class="subtitle">记录者 · 学习者 · 梦想家</p>
-          <p class="description">
+          <h1 id="about-name">你好，我是 <span style="color: var(--color-accent);">你</span></h1>
+          <p class="subtitle" id="about-subtitle">记录者 · 学习者 · 梦想家</p>
+          <p class="description" id="about-bio">
             欢迎来到我的数字花园。这是一个我记录生活、收藏回忆、分享学习的地方。<br>
             我喜欢探索新事物，享受记录带来的乐趣。这里有我的故事，我的思考，我的成长。
           </p>
@@ -156,19 +156,11 @@
         <div class="info-grid">
           <div class="info-item">
             <span class="label">位置：</span>
-            <span>地球 · 中国</span>
+            <span id="about-location">地球 · 中国</span>
           </div>
           <div class="info-item">
             <span class="label">邮箱：</span>
-            <span>your@email.com</span>
-          </div>
-          <div class="info-item">
-            <span class="label">爱好：</span>
-            <span>阅读、摄影、编程</span>
-          </div>
-          <div class="info-item">
-            <span class="label">状态：</span>
-            <span>持续学习中</span>
+            <span id="about-email">your@email.com</span>
           </div>
         </div>
       </div>
@@ -227,6 +219,8 @@
     </div>
   </footer>
 
+  <script src="js/supabase.js"></script>
   <script src="js/main.js"></script>
+  <script src="js/frontend.js"></script>
 </body>
 </html>

@@ -115,6 +115,14 @@ const supabaseApi = {
       headers: { 'apikey': SUPABASE_KEY, 'Authorization': `Bearer ${SUPABASE_KEY}` }
     });
     return res.ok;
+  },
+
+  async getProfile() {
+    const res = await fetch(`${SUPABASE_URL}/rest/v1/profile?id=eq.1`, {
+      headers: { 'apikey': SUPABASE_KEY, 'Authorization': `Bearer ${SUPABASE_KEY}` }
+    });
+    const data = await res.json();
+    return data && data.length > 0 ? data[0] : null;
   }
 };
 

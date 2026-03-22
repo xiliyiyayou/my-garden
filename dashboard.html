@@ -249,13 +249,51 @@
     </div>
     
     <div class="dash-nav">
-      <button class="active" data-tab="logs">日志</button>
+      <button class="active" data-tab="profile">个人资料</button>
+      <button data-tab="logs">日志</button>
       <button data-tab="notes">笔记</button>
       <button data-tab="photos">相册</button>
       <button data-tab="settings">设置</button>
     </div>
     
-    <section id="logs" class="dash-section active">
+    <section id="profile" class="dash-section active">
+      <div class="card">
+        <h3 style="margin-bottom: var(--spacing-md);">头像设置</h3>
+        <div style="display: flex; align-items: center; gap: var(--spacing-md); margin-bottom: var(--spacing-md);">
+          <img id="profile-avatar-preview" src="images/1.jpg" style="width: 100px; height: 100px; border-radius: 50%; object-fit: cover; border: 3px solid var(--color-accent);">
+          <div>
+            <button class="btn btn-secondary" onclick="document.getElementById('avatar-input').click()">更换头像</button>
+            <input type="file" id="avatar-input" accept="image/*" style="display: none;">
+          </div>
+        </div>
+      </div>
+      <div class="card" style="margin-top: var(--spacing-md);">
+        <h3 style="margin-bottom: var(--spacing-md);">基本信息</h3>
+        <div class="form-group">
+          <label>昵称</label>
+          <input type="text" id="profile-name" placeholder="你的昵称">
+        </div>
+        <div class="form-group">
+          <label>副标题</label>
+          <input type="text" id="profile-subtitle" placeholder="如：记录者 · 学习者">
+        </div>
+        <div class="form-group">
+          <label>简介</label>
+          <textarea id="profile-bio" rows="4" placeholder="介绍一下你自己"></textarea>
+        </div>
+        <div class="form-group">
+          <label>位置</label>
+          <input type="text" id="profile-location" placeholder="如：地球 · 中国">
+        </div>
+        <div class="form-group">
+          <label>邮箱</label>
+          <input type="email" id="profile-email" placeholder="your@email.com">
+        </div>
+        <button class="btn btn-primary" onclick="saveProfile()">保存</button>
+      </div>
+    </section>
+    
+    <section id="logs" class="dash-section">
       <div style="margin-bottom: var(--spacing-md);">
         <button class="btn btn-primary" onclick="openModal('log')">+ 添加日志</button>
       </div>
@@ -343,6 +381,7 @@
     
     async function init() {
       await loadData();
+      await loadProfile();
       renderAll();
     }
     
@@ -355,6 +394,98 @@
         console.error('加载数据失败', e);
       }
     }
+    
+    async function loadProfile() {
+      try {
+        const res = await fetch(`${SUPABASE_URL}/rest/v1/profile?id=eq.1`, {
+          headers: { 'apikey': SUPABASE_KEY, 'Authorization': `Bearer ${SUPABASE_KEY}` }
+        });
+        const profile = await res.json();
+        if (profile && profile.length > 0) {
+          const p = profile[0];
+          if (p.avatar) document.getElementById('profile-avatar-preview').src = p.avatar;
+          if (p.name) document.getElementById('profile-name').value = p.name;
+          if (p.subtitle) document.getElementById('profile-subtitle').value = p.subtitle;
+          if (p.bio) document.getElementById('profile-bio').value = p.bio;
+          if (p.location) document.getElementById('profile-location').value = p.location;
+          if (p.email) document.getElementById('profile-email').value = p.email;
+        }
+      } catch (e) {
+        console.error('加载个人资料失败', e);
+      }
+    }
+    
+    async function saveProfile() {
+      const profile = {
+        id: '1',
+        name: document.getElementById('profile-name').value,
+        subtitle: document.getElementById('profile-subtitle').value,
+        bio: document.getElementById('profile-bio').value,
+        location: document.getElementById('profile-location').value,
+        email: document.getElementById('profile-email').value
+      };
+      
+      try {
+        const res = await fetch(`${SUPABASE_URL}/rest/v1/profile?id=eq.1`, {
+          method: 'PATCH',
+          headers: { 
+            'apikey': SUPABASE_KEY, 
+            'Authorization': `Bearer ${SUPABASE_KEY}`,
+            'Content-Type': 'application/json',
+            'Prefer': 'return=minimal'
+          },
+          body: JSON.stringify(profile)
+        });
+        
+        if (res.ok) {
+          alert('保存成功！');
+        } else {
+          // 如果没记录，插入新记录
+          await fetch(`${SUPABASE_URL}/rest/v1/profile`, {
+            method: 'POST',
+            headers: { 
+              'apikey': SUPABASE_KEY, 
+              'Authorization': `Bearer ${SUPABASE_KEY}`,
+              'Content-Type': 'application/json',
+              'Prefer': 'return=minimal'
+            },
+            body: JSON.stringify(profile)
+          });
+          alert('保存成功！');
+        }
+      } catch (e) {
+        alert('保存失败');
+      }
+    }
+    
+    document.getElementById('avatar-input').addEventListener('change', async function(e) {
+      const file = e.target.files[0];
+      if (!file) return;
+      
+      const reader = new FileReader();
+      reader.onload = async function(evt) {
+        const avatarUrl = evt.target.result;
+        document.getElementById('profile-avatar-preview').src = avatarUrl;
+        
+        try {
+          await fetch(`${SUPABASE_URL}/rest/v1/profile?id=eq.1`, {
+            method: 'PATCH',
+            headers: { 
+              'apikey': SUPABASE_KEY, 
+              'Authorization': `Bearer ${SUPABASE_KEY}`,
+              'Content-Type': 'application/json',
+              'Prefer': 'return=minimal'
+            },
+            body: JSON.stringify({ id: '1', avatar: avatarUrl })
+          });
+          alert('头像已更新！');
+        } catch (e) {
+          console.error('更新头像失败', e);
+        }
+      };
+      reader.readAsDataURL(file);
+      this.value = '';
+    });
     
     async function renderAll() {
       renderLogs();

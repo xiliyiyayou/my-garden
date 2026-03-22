@@ -4,6 +4,47 @@ async function loadAndRender() {
   const galleryContainer = document.getElementById('gallery-content');
   
   try {
+    // 加载个人资料
+    const profile = await window.supabaseApi.getProfile();
+    if (profile) {
+      // 首页
+      const nameEl = document.getElementById('hero-name');
+      const subtitleEl = document.getElementById('hero-subtitle');
+      if (nameEl && profile.name) {
+        nameEl.innerHTML = `你好，我是 <span>${escapeHtml(profile.name)}</span>`;
+      }
+      if (subtitleEl && profile.subtitle) {
+        subtitleEl.textContent = profile.subtitle;
+      }
+      
+      // 关于页
+      const aboutAvatar = document.getElementById('about-avatar');
+      const aboutName = document.getElementById('about-name');
+      const aboutSubtitle = document.getElementById('about-subtitle');
+      const aboutBio = document.getElementById('about-bio');
+      const aboutLocation = document.getElementById('about-location');
+      const aboutEmail = document.getElementById('about-email');
+      
+      if (aboutAvatar && profile.avatar) {
+        aboutAvatar.src = profile.avatar;
+      }
+      if (aboutName && profile.name) {
+        aboutName.innerHTML = `你好，我是 <span style="color: var(--color-accent);">${escapeHtml(profile.name)}</span>`;
+      }
+      if (aboutSubtitle && profile.subtitle) {
+        aboutSubtitle.textContent = profile.subtitle;
+      }
+      if (aboutBio && profile.bio) {
+        aboutBio.innerHTML = profile.bio.replace(/\n/g, '<br>');
+      }
+      if (aboutLocation && profile.location) {
+        aboutLocation.textContent = profile.location;
+      }
+      if (aboutEmail && profile.email) {
+        aboutEmail.textContent = profile.email;
+      }
+    }
+    
     if (logsContainer) {
       const logs = await window.supabaseApi.getLogs() || [];
       if (logs.length === 0) {
