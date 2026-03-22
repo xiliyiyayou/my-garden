@@ -86,6 +86,10 @@
       animation-play-state: paused;
     }
     
+    .cube-wrap.dragging {
+      animation: none !important;
+    }
+    
     .hero-3d .hint {
       text-align: center;
       margin-top: var(--spacing-sm);
@@ -243,5 +247,75 @@
   <script src="js/main.js"></script>
   <script src="js/frontend.js"></script>
   <script src="js/dev-entry.js"></script>
+  <script>
+    // 3D旋转相册鼠标交互
+    (function() {
+      const cubeWrap = document.querySelector('.cube-wrap');
+      const hero3d = document.querySelector('.hero-3d');
+      if (!cubeWrap || !hero3d) return;
+      
+      let isDragging = false;
+      let startX, startY;
+      let rotateX = -10;
+      let rotateY = 0;
+      
+      hero3d.addEventListener('mousedown', function(e) {
+        isDragging = true;
+        startX = e.clientX;
+        startY = e.clientY;
+        cubeWrap.classList.add('dragging');
+      });
+      
+      document.addEventListener('mousemove', function(e) {
+        if (!isDragging) return;
+        
+        const deltaX = e.clientX - startX;
+        const deltaY = e.clientY - startY;
+        
+        rotateY += deltaX * 0.5;
+        rotateX -= deltaY * 0.5;
+        
+        cubeWrap.style.transform = `rotateX(${rotateX}deg) rotateY(${rotateY}deg)`;
+        
+        startX = e.clientX;
+        startY = e.clientY;
+      });
+      
+      document.addEventListener('mouseup', function() {
+        if (isDragging) {
+          isDragging = false;
+          cubeWrap.classList.remove('dragging');
+        }
+      });
+      
+      // 触摸支持
+      hero3d.addEventListener('touchstart', function(e) {
+        isDragging = true;
+        startX = e.touches[0].clientX;
+        startY = e.touches[0].clientY;
+        cubeWrap.classList.add('dragging');
+      });
+      
+      document.addEventListener('touchmove', function(e) {
+        if (!isDragging) return;
+        
+        const deltaX = e.touches[0].clientX - startX;
+        const deltaY = e.touches[0].clientY - startY;
+        
+        rotateY += deltaX * 0.5;
+        rotateX -= deltaY * 0.5;
+        
+        cubeWrap.style.transform = `rotateX(${rotateX}deg) rotateY(${rotateY}deg)`;
+        
+        startX = e.touches[0].clientX;
+        startY = e.touches[0].clientY;
+      });
+      
+      document.addEventListener('touchend', function() {
+        isDragging = false;
+        cubeWrap.classList.remove('dragging');
+      });
+    })();
+  </script>
 </body>
 </html>
