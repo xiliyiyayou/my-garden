@@ -366,6 +366,8 @@
   <script src="js/supabase.js"></script>
   <script src="js/main.js"></script>
   <script>
+    document.body.classList.add('loading-state');
+    
     if (!sessionStorage.getItem('admin_logged')) {
       window.location.href = 'admin.html';
       throw new Error('Unauthorized');
@@ -520,6 +522,8 @@
       document.getElementById('stat-photos').textContent = data.photos.length;
       
       // 移除加载状态
+      document.body.classList.remove('loading-state');
+      document.body.classList.add('loaded');
       document.getElementById('stats-area').classList.remove('loading', 'active');
       document.getElementById('logs-list').classList.remove('loading', 'active');
       document.getElementById('notes-list').classList.remove('loading', 'active');

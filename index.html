@@ -242,12 +242,6 @@
   <script src="js/supabase.js"></script>
   <script src="js/main.js"></script>
   <script src="js/frontend.js"></script>
-  <script>
-    // 开发者入口：通过 ?dev 或 ?admin 参数访问
-    const params = new URLSearchParams(window.location.search);
-    if (params.has('dev') || params.has('admin') || params.has('d')) {
-      document.getElementById('dev-area').style.display = 'block';
-    }
-  </script>
+  <script src="js/dev-entry.js"></script>
 </body>
 </html>

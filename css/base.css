@@ -100,12 +100,27 @@ h4 { font-size: 1.25rem; }
 }
 
 .loading {
-  opacity: 0;
+  opacity: 0 !important;
   transition: opacity 0.3s ease;
 }
 
 .loading.active {
+  opacity: 1 !important;
+}
+
+body.loading-state .fade-in,
+body.loading-state .timeline,
+body.loading-state .notes-list,
+body.loading-state .gallery-grid {
+  opacity: 0 !important;
+}
+
+body.loaded .fade-in,
+body.loaded .timeline,
+body.loaded .notes-list,
+body.loaded .gallery-grid {
   opacity: 1;
+  transition: opacity 0.3s ease;
 }
 
 ::-webkit-scrollbar {
