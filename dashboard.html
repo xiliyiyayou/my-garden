@@ -253,7 +253,6 @@
       <button data-tab="logs">日志</button>
       <button data-tab="notes">笔记</button>
       <button data-tab="photos">相册</button>
-      <button data-tab="settings">设置</button>
     </div>
     
     <section id="profile" class="dash-section active">
@@ -290,6 +289,7 @@
           <input type="email" id="profile-email" placeholder="your@email.com">
         </div>
         <button class="btn btn-primary" onclick="saveProfile()">保存</button>
+        <p style="margin-top: 20px; font-size: 10px; color: var(--color-border); cursor: pointer;" onclick="toggleSettings()">· · ·</p>
       </div>
     </section>
     
@@ -315,7 +315,7 @@
       <div class="item-list" id="photos-list"></div>
     </section>
     
-    <section id="settings" class="dash-section">
+    <section id="settings" class="dash-section" style="display: none;">
       <div class="card">
         <h3 style="margin-bottom: var(--spacing-md);">修改密码</h3>
         <div class="form-group">
@@ -518,6 +518,15 @@
       document.getElementById('stat-logs').textContent = data.logs.length;
       document.getElementById('stat-notes').textContent = data.notes.length;
       document.getElementById('stat-photos').textContent = data.photos.length;
+    }
+    
+    function toggleSettings() {
+      const settings = document.getElementById('settings');
+      if (settings.style.display === 'none') {
+        settings.style.display = 'block';
+      } else {
+        settings.style.display = 'none';
+      }
     }
     
     function renderLogs() {
