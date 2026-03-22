@@ -325,6 +325,7 @@
     </div>
   </div>
 
+  <script src="js/supabase.js"></script>
   <script src="js/main.js"></script>
   <script>
     if (!sessionStorage.getItem('admin_logged')) {
@@ -332,19 +333,30 @@
     }
     
     let data = {
-      logs: JSON.parse(localStorage.getItem('garden_logs') || '[]'),
-      notes: JSON.parse(localStorage.getItem('garden_notes') || '[]'),
-      photos: JSON.parse(localStorage.getItem('garden_photos') || '[]')
+      logs: [],
+      notes: [],
+      photos: []
     };
     
     let currentType = 'log';
     let editingItem = null;
     
-    function init() {
+    async function init() {
+      await loadData();
       renderAll();
     }
     
-    function renderAll() {
+    async function loadData() {
+      try {
+        data.logs = await window.supabaseApi.getLogs() || [];
+        data.notes = await window.supabaseApi.getNotes() || [];
+        data.photos = await window.supabaseApi.getPhotos() || [];
+      } catch (e) {
+        console.error('加载数据失败', e);
+      }
+    }
+    
+    async function renderAll() {
       renderLogs();
       renderNotes();
       renderPhotos();
@@ -445,20 +457,20 @@
       document.getElementById('modal').classList.add('active');
     }
     
-    function deleteItem(type, id) {
+    async function deleteItem(type, id) {
       if (!confirm('确定要删除吗？')) return;
       
       if (type === 'log') {
+        await window.supabaseApi.deleteLog(id);
         data.logs = data.logs.filter(i => i.id !== id);
-        localStorage.setItem('garden_logs', JSON.stringify(data.logs));
         renderLogs();
       } else if (type === 'note') {
+        await window.supabaseApi.deleteNote(id);
         data.notes = data.notes.filter(i => i.id !== id);
-        localStorage.setItem('garden_notes', JSON.stringify(data.notes));
         renderNotes();
       } else if (type === 'photo') {
+        await window.supabaseApi.deletePhoto(id);
         data.photos = data.photos.filter(i => i.id !== id);
-        localStorage.setItem('garden_photos', JSON.stringify(data.photos));
         renderPhotos();
       }
       
@@ -467,7 +479,7 @@
       document.getElementById('stat-photos').textContent = data.photos.length;
     }
     
-    document.getElementById('modal-form').addEventListener('submit', function(e) {
+    document.getElementById('modal-form').addEventListener('submit', async function(e) {
       e.preventDefault();
       
       const id = document.getElementById('edit-id').value || Date.now().toString();
@@ -481,21 +493,23 @@
       
       if (currentType === 'log') {
         if (editingItem) {
+          await window.supabaseApi.updateLog(id, item);
           const idx = data.logs.findIndex(i => i.id === id);
           data.logs[idx] = { ...data.logs[idx], ...item };
         } else {
+          await window.supabaseApi.addLog(item);
           data.logs.unshift(item);
         }
-        localStorage.setItem('garden_logs', JSON.stringify(data.logs));
         renderLogs();
       } else {
         if (editingItem) {
+          await window.supabaseApi.updateNote(id, item);
           const idx = data.notes.findIndex(i => i.id === id);
           data.notes[idx] = { ...data.notes[idx], ...item };
         } else {
+          await window.supabaseApi.addNote(item);
           data.notes.unshift(item);
         }
-        localStorage.setItem('garden_notes', JSON.stringify(data.notes));
         renderNotes();
       }
       
@@ -504,24 +518,27 @@
       closeModal();
     });
     
-    document.getElementById('photo-input').addEventListener('change', function(e) {
+    document.getElementById('photo-input').addEventListener('change', async function(e) {
       const files = Array.from(e.target.files);
-      files.forEach(file => {
+      for (const file of files) {
         const reader = new FileReader();
-        reader.onload = function(evt) {
-          const photo = {
-            id: Date.now().toString() + Math.random(),
-            src: evt.target.result,
-            name: file.name,
-            date: new Date().toISOString().split('T')[0]
+        await new Promise(resolve => {
+          reader.onload = async function(evt) {
+            const photo = {
+              id: Date.now().toString() + Math.random(),
+              src: evt.target.result,
+              name: file.name,
+              date: new Date().toISOString().split('T')[0]
+            };
+            await window.supabaseApi.addPhoto(photo);
+            data.photos.push(photo);
+            renderPhotos();
+            document.getElementById('stat-photos').textContent = data.photos.length;
+            resolve();
           };
-          data.photos.push(photo);
-          localStorage.setItem('garden_photos', JSON.stringify(data.photos));
-          renderPhotos();
-          document.getElementById('stat-photos').textContent = data.photos.length;
-        };
-        reader.readAsDataURL(file);
-      });
+          reader.readAsDataURL(file);
+        });
+      }
       this.value = '';
     });
     
