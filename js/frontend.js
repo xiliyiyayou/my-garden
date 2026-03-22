@@ -4,9 +4,27 @@ async function loadAndRender() {
   const logsContainer = document.getElementById('timeline-list');
   const notesContainer = document.getElementById('notes-list-content');
   const galleryContainer = document.getElementById('gallery-content');
+  const cubeFaces = document.getElementById('cube-faces');
   
   try {
     await new Promise(r => setTimeout(r, 50));
+    
+    // 加载首页3D旋转相册照片
+    if (cubeFaces) {
+      const photos = await window.supabaseApi.getPhotos();
+      if (photos && photos.length >= 6) {
+        const faces = cubeFaces.querySelectorAll('.cube-face img');
+        faces[0].src = photos[0].src;
+        faces[1].src = photos[1].src;
+        faces[2].src = photos[2].src;
+        faces[3].src = photos[3].src;
+        faces[4].src = photos[4].src;
+        faces[5].src = photos[5].src;
+        const hint = document.getElementById('cube-hint');
+        if (hint) hint.textContent = '拖动旋转 · 点击跳转相册';
+      }
+    }
+    
     const profile = await window.supabaseApi.getProfile();
     if (profile) {
       // 首页
