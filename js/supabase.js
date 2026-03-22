@@ -1,5 +1,5 @@
-const SUPABASE_URL = 'https://gfghweunfkwetamseteb.supabase.co';
-const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImdmZ2h3ZXVuZmt3ZXRhbXNldGViIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzQxNTE2ODAsImV4cCI6MjA4OTcyNzY4MH0.o-V0CmBaM0lYhFi4cqigfwmunXW1XzzW0OFyIUD4fKM';
+var SUPABASE_URL = 'https://gfghweunfkwetamseteb.supabase.co';
+var SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImdmZ2h3ZXVuZmt3ZXRhbXNldGViIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzQxNTE2ODAsImV4cCI6MjA4OTcyNzY4MH0.o-V0CmBaM0lYhFi4cqigfwmunXW1XzzW0OFyIUD4fKM';
 
 const supabaseApi = {
   async getLogs() {
