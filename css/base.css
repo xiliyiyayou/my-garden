@@ -99,28 +99,24 @@ h4 { font-size: 1.25rem; }
   transform: translateY(0);
 }
 
-.loading {
-  opacity: 0 !important;
-  transition: opacity 0.3s ease;
+/* 加载状态 - 页面内容默认不可见，加载后显示 */
+#main-content {
+  visibility: hidden;
 }
 
-.loading.active {
-  opacity: 1 !important;
+body.loaded #main-content {
+  visibility: visible;
+  transition: visibility 0.3s ease;
 }
 
-body.loading-state .fade-in,
-body.loading-state .timeline,
-body.loading-state .notes-list,
-body.loading-state .gallery-grid {
-  opacity: 0 !important;
+/* 后台专用 */
+#dashboard-content {
+  visibility: hidden;
 }
 
-body.loaded .fade-in,
-body.loaded .timeline,
-body.loaded .notes-list,
-body.loaded .gallery-grid {
-  opacity: 1;
-  transition: opacity 0.3s ease;
+body.loaded #dashboard-content {
+  visibility: visible;
+  transition: visibility 0.3s ease;
 }
 
 ::-webkit-scrollbar {

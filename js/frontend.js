@@ -5,14 +5,8 @@ async function loadAndRender() {
   const notesContainer = document.getElementById('notes-list-content');
   const galleryContainer = document.getElementById('gallery-content');
   
-  // 显示加载状态
-  if (logsContainer) logsContainer.classList.add('loading', 'active');
-  if (notesContainer) notesContainer.classList.add('loading', 'active');
-  if (galleryContainer) galleryContainer.classList.add('loading', 'active');
-  
   try {
-    // 加载个人资料
-    await new Promise(r => setTimeout(r, 100));
+    await new Promise(r => setTimeout(r, 50));
     const profile = await window.supabaseApi.getProfile();
     if (profile) {
       // 首页
@@ -128,9 +122,6 @@ async function loadAndRender() {
     // 移除加载状态
     document.body.classList.remove('loading-state');
     document.body.classList.add('loaded');
-    if (logsContainer) logsContainer.classList.remove('loading', 'active');
-    if (notesContainer) notesContainer.classList.remove('loading', 'active');
-    if (galleryContainer) galleryContainer.classList.remove('loading', 'active');
   } catch (e) {
     console.error('加载数据失败', e);
     document.body.classList.remove('loading-state');
