@@ -99,6 +99,15 @@ h4 { font-size: 1.25rem; }
   transform: translateY(0);
 }
 
+.loading {
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.loading.active {
+  opacity: 1;
+}
+
 ::-webkit-scrollbar {
   width: 8px;
 }

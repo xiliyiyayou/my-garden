@@ -233,7 +233,7 @@
       </div>
     </div>
     
-    <div class="stats">
+    <div class="stats loading" id="stats-area">
       <div class="stat-card">
         <div class="num" id="stat-logs">0</div>
         <div class="label">日志</div>
@@ -297,14 +297,14 @@
       <div style="margin-bottom: var(--spacing-md);">
         <button class="btn btn-primary" onclick="openModal('log')">+ 添加日志</button>
       </div>
-      <div class="item-list" id="logs-list"></div>
+      <div class="item-list loading active" id="logs-list"></div>
     </section>
     
     <section id="notes" class="dash-section">
       <div style="margin-bottom: var(--spacing-md);">
         <button class="btn btn-primary" onclick="openModal('note')">+ 添加笔记</button>
       </div>
-      <div class="item-list" id="notes-list"></div>
+      <div class="item-list loading active" id="notes-list"></div>
     </section>
     
     <section id="photos" class="dash-section">
@@ -312,7 +312,7 @@
         <button class="btn btn-primary" onclick="document.getElementById('photo-input').click()">+ 上传照片</button>
         <input type="file" id="photo-input" accept="image/*" multiple style="display: none;">
       </div>
-      <div class="item-list" id="photos-list"></div>
+      <div class="item-list loading active" id="photos-list"></div>
     </section>
     
     <section id="settings" class="dash-section" style="display: none;">
@@ -518,6 +518,12 @@
       document.getElementById('stat-logs').textContent = data.logs.length;
       document.getElementById('stat-notes').textContent = data.notes.length;
       document.getElementById('stat-photos').textContent = data.photos.length;
+      
+      // 移除加载状态
+      document.getElementById('stats-area').classList.remove('loading', 'active');
+      document.getElementById('logs-list').classList.remove('loading', 'active');
+      document.getElementById('notes-list').classList.remove('loading', 'active');
+      document.getElementById('photos-list').classList.remove('loading', 'active');
     }
     
     function toggleSettings() {
