@@ -5,7 +5,9 @@ async function loadAndRender() {
   
   try {
     // 加载个人资料
+    console.log('Loading profile...');
     const profile = await window.supabaseApi.getProfile();
+    console.log('Got profile:', profile);
     if (profile) {
       // 首页
       const nameEl = document.getElementById('hero-name');

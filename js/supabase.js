@@ -118,10 +118,12 @@ const supabaseApi = {
   },
 
   async getProfile() {
+    console.log('Fetching profile from:', SUPABASE_URL);
     const res = await fetch(`${SUPABASE_URL}/rest/v1/profile?id=eq.1`, {
       headers: { 'apikey': SUPABASE_KEY, 'Authorization': `Bearer ${SUPABASE_KEY}` }
     });
     const data = await res.json();
+    console.log('Profile data:', data);
     return data && data.length > 0 ? data[0] : null;
   }
 };
