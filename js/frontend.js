@@ -51,7 +51,7 @@ async function loadAndRender() {
         logsContainer.innerHTML = `
           <div class="empty-state">
             <div class="empty-state-icon">📝</div>
-            <p>暂无记录，<a href="admin.html">登录后台</a> 添加内容</p>
+            <p>暂无记录</p>
           </div>
         `;
       } else {
@@ -75,7 +75,7 @@ async function loadAndRender() {
       if (notes.length === 0) {
         notesContainer.innerHTML = `
           <div class="empty-state">
-            <p>暂无笔记，<a href="admin.html">登录后台</a> 添加</p>
+            <p>暂无笔记</p>
           </div>
         `;
       } else {
@@ -101,7 +101,7 @@ async function loadAndRender() {
       if (photos.length === 0) {
         galleryContainer.innerHTML = `
           <div class="empty-state">
-            <p>暂无照片，<a href="admin.html">登录后台</a> 上传</p>
+            <p>暂无照片</p>
           </div>
         `;
       } else {
