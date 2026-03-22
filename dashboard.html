@@ -382,9 +382,15 @@
     let data = {
       logs: [],
       notes: [],
-      photos: []
+      photos: [],
+      journey: []
     };
-    
+
+    // 清除旧缓存
+    try {
+      localStorage.removeItem('garden_cache');
+    } catch(e) {}
+
     let currentType = 'log';
     let editingItem = null;
     

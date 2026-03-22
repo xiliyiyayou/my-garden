@@ -92,6 +92,10 @@
 
   <script src="js/supabase.js"></script>
   <script>
+    // 清除旧缓存
+    try { localStorage.removeItem('garden_cache'); } catch(e) {}
+  </script>
+  <script>
     document.getElementById('loginForm').addEventListener('submit', async function(e) {
       e.preventDefault();
       const password = document.getElementById('password').value;
